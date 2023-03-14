@@ -50,7 +50,7 @@
                               </Label>
                               <TextField fx:id="rosterFirstNameText" GridPane.columnIndex="1" />
                               <TextField fx:id="rosterLastNameText" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <DatePicker fx:id="rosterDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <DatePicker editable = "false" fx:id="rosterDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <Label text="Last Name:" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                               <Label text="Date of Birth:" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                               <Label text="Major:" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
@@ -168,31 +168,26 @@
                               </Label>
                               <TextField fx:id="commandsFirstNameText" GridPane.columnIndex="1" />
                               <TextField fx:id="commandsLastNameText" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <DatePicker fx:id="commandsDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <DatePicker editable = "false" fx:id="commandsDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <Label text="Last Name:" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                               <Label text="Date of Birth:" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                               <Label text="Credits:" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                              <Button fx:id="enrollButton" mnemonicParsing="false" text="Enroll" GridPane.rowIndex="5">
+                              <Button onAction = "#onEnrollClick" fx:id="enrollButton" mnemonicParsing="false" text="Enroll" GridPane.rowIndex="5">
                                  <GridPane.margin>
                                     <Insets left="165.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button fx:id="dropButton" mnemonicParsing="false" text="Drop" GridPane.rowIndex="5">
+                              <Button onAction = "#onDropClick" fx:id="dropButton" mnemonicParsing="false" text="Drop" GridPane.rowIndex="5">
                                  <GridPane.margin>
                                     <Insets left="220.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button fx:id="awardScholarshipButton" mnemonicParsing="false" text="Award Scholarship" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Button onAction = "#onScholarshipClick" fx:id="awardScholarshipButton" mnemonicParsing="false" text="Award Scholarship" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <TextField fx:id="commandsCreditsText" maxWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <Label text="Scholarship to Award:" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                               <TextField fx:id="scholarshipDollarsBox" maxWidth="57.0" prefHeight="25.0" prefWidth="57.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                  <GridPane.margin>
                                     <Insets left="20.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="scholarshipCentsBox" maxWidth="30.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                 <GridPane.margin>
-                                    <Insets left="85.0" />
                                  </GridPane.margin>
                               </TextField>
                               <Label text="\$" GridPane.columnIndex="1" GridPane.rowIndex="4">
@@ -203,17 +198,9 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <Label text="." GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                 <GridPane.margin>
-                                    <Insets left="78.0" />
-                                 </GridPane.margin>
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                              </Label>
                            </children>
                         </GridPane>
-                        <TextField fx:id="commandsErrorTextField" layoutX="164.0" layoutY="186.0" prefHeight="25.0" prefWidth="223.0" />
+                        <TextField fx:id="commandsErrorTextField" layoutX="164.0" layoutY="186.0" prefHeight="25.0" prefWidth="400.0" />
                      </children>
                   </AnchorPane>
               </content>
@@ -224,8 +211,8 @@
                      <children>
                         <Label layoutX="113.0" layoutY="46.0" text="Print By:" />
                         <ChoiceBox fx:id="printByBox" layoutX="180.0" layoutY="42.0" prefWidth="150.0" AnchorPane.topAnchor="42.0" />
-                        <Button fx:id="printButton" layoutX="145.0" layoutY="90.0" mnemonicParsing="false" text="Print" />
-                        <Button fx:id="cancelPrintButton" layoutX="203.0" layoutY="90.0" mnemonicParsing="false" text="Cancel" />
+                        <Button onAction = "#onPrintClick" fx:id="printButton" layoutX="145.0" layoutY="90.0" mnemonicParsing="false" text="Print" />
+                        <Button onAction = "#onCancelClick" fx:id="cancelPrintButton" layoutX="203.0" layoutY="90.0" mnemonicParsing="false" text="Cancel" />
                         <TextArea fx:id="printTextArea" layoutX="21.0" layoutY="132.0" prefHeight="157.0" prefWidth="532.0" />
                      </children>
                   </AnchorPane>
