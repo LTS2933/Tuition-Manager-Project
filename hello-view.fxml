@@ -50,7 +50,7 @@
                               </Label>
                               <TextField fx:id="rosterFirstNameText" GridPane.columnIndex="1" />
                               <TextField fx:id="rosterLastNameText" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <DatePicker editable = "false" fx:id="rosterDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <DatePicker fx:id="rosterDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <Label text="Last Name:" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                               <Label text="Date of Birth:" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                               <Label text="Major:" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
@@ -81,15 +81,18 @@
                               </RadioButton>
                               <Label text="Credits Completed:" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                               <Label text="Type of Student:" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                              <RadioButton fx:id="triStateNY" mnemonicParsing="false" onAction="#chooseTriStateNY" text="Tri-State NY" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                              <RadioButton fx:id="triStateNY" mnemonicParsing="false" onAction="#chooseNonResident" text="Tri-State NY" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                  <GridPane.margin>
                                     <Insets left="97.0" />
                                  </GridPane.margin>
                                  <font>
                                     <Font size="10.0" />
                                  </font>
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="nonResidentToggle" />
+                                 </toggleGroup>
                               </RadioButton>
-                              <RadioButton fx:id="triStateCT" mnemonicParsing="false" onAction="#chooseTriStateCT" text="Tri-State CT" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                              <RadioButton fx:id="triStateCT" mnemonicParsing="false" onAction="#chooseNonResident" text="Tri-State CT" toggleGroup="$nonResidentToggle" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                  <font>
                                     <Font size="10.0" />
                                  </font>
@@ -97,8 +100,8 @@
                                     <Insets left="170.0" />
                                  </GridPane.margin>
                               </RadioButton>
-                              <RadioButton fx:id="international" mnemonicParsing="false" onAction="#chooseInternational" text="International" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                              <CheckBox fx:id="studyAbroad" mnemonicParsing="false" text="Study Abroad" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                              <RadioButton fx:id="international" mnemonicParsing="false" onAction="#chooseNonResident" onMouseClicked="#chooseInternational" text="International" toggleGroup="$nonResidentToggle" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                              <CheckBox fx:id="studyAbroad" mnemonicParsing="false" onAction="#chooseInternational" text="Study Abroad" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                  <font>
                                     <Font size="9.0" />
                                  </font>
@@ -116,14 +119,9 @@
                                     <Insets left="210.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button fx:id="changeMajorButton" mnemonicParsing="false" text="Change Major" GridPane.columnIndex="1" GridPane.rowIndex="8">
-                                 <GridPane.margin>
-                                    <Insets />
-                                 </GridPane.margin>
-                              </Button>
                               <Button fx:id="loadFromFileButton" mnemonicParsing="false" text="Load from File" GridPane.columnIndex="1" GridPane.rowIndex="8">
                                  <GridPane.margin>
-                                    <Insets left="95.0" />
+                                    <Insets />
                                  </GridPane.margin>
                               </Button>
                               <TextField fx:id="rosterCreditsText" maxWidth="40.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -131,7 +129,7 @@
                               <RadioButton fx:id="nonResident" mnemonicParsing="false" onAction="#chooseNonResident" text="Non-Resident" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                            </children>
                            <padding>
-                              <Insets top="20.0" />
+                              <Insets top="10.0" />
                            </padding>
                         </GridPane>
                      </children>
@@ -140,7 +138,39 @@
           </Tab>
           <Tab text="Modifications">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <GridPane layoutX="10.0" layoutY="14.0" minHeight="130.0" prefHeight="90.0" prefWidth="580.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="First Name:" GridPane.halignment="CENTER" />
+                              <Label text="Last Name:" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                              <Label text="Date of Birth:" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                              <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField GridPane.columnIndex="1" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                        <Button layoutX="31.0" layoutY="144.0" mnemonicParsing="false" text="Change Major" />
+                        <Button layoutX="133.0" layoutY="144.0" mnemonicParsing="false" text="Change Credits Completed" />
+                        <Button layoutX="300.0" layoutY="144.0" mnemonicParsing="false" text="Change Credits Enrolled" />
+                        <Button layoutX="451.0" layoutY="144.0" mnemonicParsing="false" text="Change Scholarship" />
+                        <Button layoutX="228.0" layoutY="173.0" mnemonicParsing="false" text="Change Type of Student" />
+                        <TextField layoutX="151.0" layoutY="222.0" />
+                        <RadioButton layoutX="372.0" layoutY="226.0" mnemonicParsing="false" text="TriState NY" visible="false" />
+                        <RadioButton layoutX="468.0" layoutY="226.0" mnemonicParsing="false" text="TriState CT" visible="false" />
+                        <RadioButton layoutX="372.0" layoutY="256.0" mnemonicParsing="false" text="International" visible="false" />
+                        <CheckBox layoutX="471.0" layoutY="256.0" mnemonicParsing="false" text="Study Abroad" visible="false" />
+                     </children></AnchorPane>
                </content>
           </Tab>
             <Tab fx:id="commandTab" text="Commands">
@@ -168,26 +198,31 @@
                               </Label>
                               <TextField fx:id="commandsFirstNameText" GridPane.columnIndex="1" />
                               <TextField fx:id="commandsLastNameText" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <DatePicker editable = "false" fx:id="commandsDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <DatePicker fx:id="commandsDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <Label text="Last Name:" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                               <Label text="Date of Birth:" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                               <Label text="Credits:" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                              <Button onAction = "#onEnrollClick" fx:id="enrollButton" mnemonicParsing="false" text="Enroll" GridPane.rowIndex="5">
+                              <Button fx:id="enrollButton" mnemonicParsing="false" text="Enroll" GridPane.rowIndex="5">
                                  <GridPane.margin>
                                     <Insets left="165.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button onAction = "#onDropClick" fx:id="dropButton" mnemonicParsing="false" text="Drop" GridPane.rowIndex="5">
+                              <Button fx:id="dropButton" mnemonicParsing="false" text="Drop" GridPane.rowIndex="5">
                                  <GridPane.margin>
                                     <Insets left="220.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button onAction = "#onScholarshipClick" fx:id="awardScholarshipButton" mnemonicParsing="false" text="Award Scholarship" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Button fx:id="awardScholarshipButton" mnemonicParsing="false" text="Award Scholarship" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <TextField fx:id="commandsCreditsText" maxWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <Label text="Scholarship to Award:" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                               <TextField fx:id="scholarshipDollarsBox" maxWidth="57.0" prefHeight="25.0" prefWidth="57.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                  <GridPane.margin>
                                     <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                              <TextField fx:id="scholarshipCentsBox" maxWidth="30.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="85.0" />
                                  </GridPane.margin>
                               </TextField>
                               <Label text="\$" GridPane.columnIndex="1" GridPane.rowIndex="4">
@@ -198,9 +233,20 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
+                              <Label text="." GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="78.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
                            </children>
+                           <padding>
+                              <Insets top="20.0" />
+                           </padding>
                         </GridPane>
-                        <TextField fx:id="commandsErrorTextField" layoutX="164.0" layoutY="186.0" prefHeight="25.0" prefWidth="400.0" />
+                        <TextField fx:id="commandsErrorTextField" layoutX="164.0" layoutY="214.0" prefHeight="25.0" prefWidth="223.0" />
                      </children>
                   </AnchorPane>
               </content>
@@ -211,8 +257,8 @@
                      <children>
                         <Label layoutX="113.0" layoutY="46.0" text="Print By:" />
                         <ChoiceBox fx:id="printByBox" layoutX="180.0" layoutY="42.0" prefWidth="150.0" AnchorPane.topAnchor="42.0" />
-                        <Button onAction = "#onPrintClick" fx:id="printButton" layoutX="145.0" layoutY="90.0" mnemonicParsing="false" text="Print" />
-                        <Button onAction = "#onCancelClick" fx:id="cancelPrintButton" layoutX="203.0" layoutY="90.0" mnemonicParsing="false" text="Cancel" />
+                        <Button fx:id="printButton" layoutX="145.0" layoutY="90.0" mnemonicParsing="false" text="Print" />
+                        <Button fx:id="cancelPrintButton" layoutX="203.0" layoutY="90.0" mnemonicParsing="false" text="Cancel" />
                         <TextArea fx:id="printTextArea" layoutX="21.0" layoutY="132.0" prefHeight="157.0" prefWidth="532.0" />
                      </children>
                   </AnchorPane>
