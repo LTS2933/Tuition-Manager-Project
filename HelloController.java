@@ -80,14 +80,13 @@ public class HelloController {
     private RadioButton triStateCT;
 
     @FXML
-    private RadioButton international;
+    private RadioButton internationalNonStudyAbroad;
 
     @FXML
-    private CheckBox studyAbroad;
+    private RadioButton internationalStudyAbroad;
 
     @FXML
     private boolean isResident;
-
 
     @FXML
     private TextField rosterFirstNameText;
@@ -127,25 +126,5 @@ public class HelloController {
 
     @FXML
     private Button loadFromFileButton;
-    @FXML
-    protected void chooseResident(){
-        nonResident.setDisable(true);
-        isResident = true;
-    }
-    @FXML
-    protected void chooseNonResident(){
-        resident.setDisable(true);
-        international.setVisible(true);
-        triStateCT.setVisible(true);
-        triStateNY.setVisible(true);
-        isResident = false;
-    }
-    @FXML
-    protected void chooseInternational(){
-        triStateNY.setDisable(true);
-        triStateCT.setDisable(true);
-        studyAbroad.setVisible(true);
-        isResident = false;
-    }
 
 }
