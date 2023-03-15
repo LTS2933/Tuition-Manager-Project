@@ -30,6 +30,9 @@ public class HelloController {
     private Button cancelButton;
 
     @FXML
+    private TextField printErrorText;
+
+    @FXML
     private TextArea printTextArea;
 
 
@@ -64,9 +67,12 @@ public class HelloController {
     private DatePicker commandsDatePicker;
 
     @FXML
-    private TextField commandsErrorTextField;
+    private TextField commandsErrorText;
 
     //FOR THE ROSTER TAB
+
+    @FXML
+    private Tab rosterTab;
     @FXML
     private RadioButton resident;
 
@@ -122,9 +128,49 @@ public class HelloController {
     private Button removeButton;
 
     @FXML
+    private Button loadFromFileButton;
+
+    @FXML
+    private TextField rosterErrorText;
+
+    //FOR THE MODIFICATIONS TAB
+
+    @FXML
+    private Tab modificationsTab;
+
+    @FXML
+    private TextField modificationsFirstNameText;
+
+    @FXML
+    private TextField modificationsLastNameText;
+
+    @FXML
+    private DatePicker modificationsDatePicker;
+
+    @FXML
+    private RadioButton modificationsBAITButton;
+
+    @FXML
+    private RadioButton modificationsCSButton;
+
+    @FXML
+    private RadioButton modificationsECEButton;
+
+    @FXML
+    private RadioButton modificationsITIButton;
+
+    @FXML
+    private RadioButton modificationsMATHButton;
+
+    @FXML
+    private TextField modificationsScholarshipDollars;
+
+    @FXML
+    private TextField modificationsScholarshipCents;
+
+    @FXML
     private Button changeMajorButton;
 
     @FXML
-    private Button loadFromFileButton;
-
+    private TextField modificationsSuccessErrorMessage;
 }
