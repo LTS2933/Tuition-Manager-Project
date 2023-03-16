@@ -22,9 +22,9 @@
    <children>
       <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
-          <Tab text="Roster">
+          <Tab fx:id="rosterTab" text="Roster">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                  <AnchorPane prefHeight="398.0" prefWidth="600.0">
                      <children>
                         <GridPane layoutX="20.0" layoutY="20.0" prefWidth="550.0">
                           <columnConstraints>
@@ -35,6 +35,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -54,93 +55,140 @@
                               <Label text="Last Name:" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                               <Label text="Date of Birth:" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                               <Label text="Major:" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                              <RadioButton fx:id="baitButton" mnemonicParsing="false" text="BAIT" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <RadioButton userData = "BAIT" fx:id="baitButton" mnemonicParsing="false" text="BAIT" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <toggleGroup>
                                     <ToggleGroup fx:id="MajorToggleGroup" />
                                  </toggleGroup>
                               </RadioButton>
-                              <RadioButton fx:id="csButton" mnemonicParsing="false" text="CS" toggleGroup="$MajorToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <RadioButton userData = "CS" fx:id="csButton" mnemonicParsing="false" text="CS" toggleGroup="$MajorToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <GridPane.margin>
                                     <Insets left="50.0" />
                                  </GridPane.margin>
                               </RadioButton>
-                              <RadioButton fx:id="eceButton" mnemonicParsing="false" text="ECE" toggleGroup="$MajorToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <RadioButton userData = "EE" fx:id="eceButton" mnemonicParsing="false" text="EE" toggleGroup="$MajorToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <GridPane.margin>
                                     <Insets left="90.0" />
                                  </GridPane.margin>
                               </RadioButton>
-                              <RadioButton fx:id="itiButton" mnemonicParsing="false" text="ITI" toggleGroup="$MajorToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <RadioButton userData = "ITI" fx:id="itiButton" mnemonicParsing="false" text="ITI" toggleGroup="$MajorToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <GridPane.margin>
                                     <Insets left="135.0" />
                                  </GridPane.margin>
                               </RadioButton>
-                              <RadioButton fx:id="mathButton" mnemonicParsing="false" text="MATH" toggleGroup="$MajorToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <RadioButton userData = "MATH" fx:id="mathButton" mnemonicParsing="false" text="MATH" toggleGroup="$MajorToggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <GridPane.margin>
                                     <Insets left="175.0" />
                                  </GridPane.margin>
                               </RadioButton>
                               <Label text="Credits Completed:" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                               <Label text="Type of Student:" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                              <RadioButton fx:id="triStateNY" mnemonicParsing="false" onAction="#chooseTriStateNY" text="Tri-State NY" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                              <RadioButton userData = "Tri-State NY" toggleGroup = "$nonResidentToggle" fx:id="triStateNY" mnemonicParsing="false" text="Tri-State NY" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                  <GridPane.margin>
-                                    <Insets left="97.0" />
+                                    <Insets />
                                  </GridPane.margin>
-                                 <font>
-                                    <Font size="10.0" />
-                                 </font>
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="nonResidentToggle" />
+                                 </toggleGroup>
                               </RadioButton>
-                              <RadioButton fx:id="triStateCT" mnemonicParsing="false" onAction="#chooseTriStateCT" text="Tri-State CT" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                 <font>
-                                    <Font size="10.0" />
-                                 </font>
+                              <RadioButton userData = "Tri-State CT" fx:id="triStateCT" mnemonicParsing="false" text="Tri-State CT" toggleGroup="$nonResidentToggle" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                  <GridPane.margin>
-                                    <Insets left="170.0" />
+                                    <Insets left="90.0" />
                                  </GridPane.margin>
                               </RadioButton>
-                              <RadioButton fx:id="international" mnemonicParsing="false" onAction="#chooseInternational" text="International" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                              <CheckBox fx:id="studyAbroad" mnemonicParsing="false" text="Study Abroad" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                                 <font>
-                                    <Font size="9.0" />
-                                 </font>
-                                 <GridPane.margin>
-                                    <Insets left="95.0" />
-                                 </GridPane.margin>
-                              </CheckBox>
-                              <Button fx:id="addButton" mnemonicParsing="false" text="Add" GridPane.rowIndex="8">
-                                 <GridPane.margin>
-                                    <Insets left="165.0" />
-                                 </GridPane.margin>
-                              </Button>
-                              <Button fx:id="removeButton" mnemonicParsing="false" text="Remove" GridPane.rowIndex="8">
-                                 <GridPane.margin>
-                                    <Insets left="210.0" />
-                                 </GridPane.margin>
-                              </Button>
-                              <Button fx:id="changeMajorButton" mnemonicParsing="false" text="Change Major" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                              <RadioButton userData = "International Non-Study Abroad" fx:id="internationalNonStudyAbroad" mnemonicParsing="false" text="International Non-Study Abroad" toggleGroup="$nonResidentToggle" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                              <Button onAction = "#onAddClick" fx:id="addButton" mnemonicParsing="false" text="Add" GridPane.rowIndex="8">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
                               </Button>
-                              <Button fx:id="loadFromFileButton" mnemonicParsing="false" text="Load from File" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                              <Button onAction = "#onRemoveClick" fx:id="removeButton" mnemonicParsing="false" text="Remove" GridPane.rowIndex="8">
                                  <GridPane.margin>
-                                    <Insets left="95.0" />
+                                    <Insets left="45.0" />
+                                 </GridPane.margin>
+                              </Button>
+                              <Button onAction = "#onLoadClick" fx:id="loadFromFileButton" mnemonicParsing="false" text="Load from File" GridPane.rowIndex="8">
+                                 <GridPane.margin>
+                                    <Insets left="110.0" />
                                  </GridPane.margin>
                               </Button>
                               <TextField fx:id="rosterCreditsText" maxWidth="40.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <RadioButton fx:id="resident" mnemonicParsing="false" onAction="#chooseResident" text="Resident" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <RadioButton fx:id="nonResident" mnemonicParsing="false" onAction="#chooseNonResident" text="Non-Resident" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <RadioButton userData = "Resident" fx:id="resident" mnemonicParsing="false" text="Resident" toggleGroup="$nonResidentToggle" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <RadioButton userData = "International Study Abroad" fx:id="internationalStudyAbroad" mnemonicParsing="false" text="International Study Abroad" toggleGroup="$nonResidentToggle" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                              <RadioButton userData = "Non-Resident" fx:id="nonResident" mnemonicParsing="false" text="Non-Resident" toggleGroup="$nonResidentToggle" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets left="70.0" />
+                                 </GridPane.margin>
+                              </RadioButton>
                            </children>
                            <padding>
-                              <Insets top="20.0" />
+                              <Insets top="10.0" />
                            </padding>
                         </GridPane>
+                        <TextField fx:id="rosterErrorText" layoutX="162.0" layoutY="325.0" prefHeight="22.0" prefWidth="400.0" />
+                        <Label layoutX="30.0" layoutY="329.0" text="Success/Error Message:" />
                      </children>
                   </AnchorPane>
                </content>
           </Tab>
           <Tab text="Modifications">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <GridPane layoutX="10.0" layoutY="14.0" minHeight="170.0" prefHeight="90.0" prefWidth="580.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="First Name:" GridPane.halignment="CENTER" />
+                              <Label text="Last Name:" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                              <Label text="Date of Birth:" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                              <DatePicker fx:id = "modificationsDatePicker" editable = "false" minHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id = "modificationsFirstName" GridPane.columnIndex="1" />
+                              <TextField fx:id = "modificationsLastName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="Major:" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                              <RadioButton userData = "BAIT" mnemonicParsing="false" text="BAIT" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="modsMajorToggle" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton userData = "CS" mnemonicParsing="false" text="CS" toggleGroup="$modsMajorToggle" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="50.0" />
+                                 </GridPane.margin>
+                              </RadioButton>
+                              <RadioButton userData = "EE" mnemonicParsing="false" text="EE" toggleGroup="$modsMajorToggle" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="90.0" />
+                                 </GridPane.margin>
+                              </RadioButton>
+                              <RadioButton userData = "ITI" mnemonicParsing="false" text="ITI" toggleGroup="$modsMajorToggle" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="135.0" />
+                                 </GridPane.margin>
+                              </RadioButton>
+                              <RadioButton userData = "MATH" mnemonicParsing="false" text="MATH" toggleGroup="$modsMajorToggle" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="175.0" />
+                                 </GridPane.margin>
+                              </RadioButton>
+                           </children>
+                        </GridPane>
+                        <Button onAction = "#onChangeMajor" layoutX="300.0" layoutY="194.0" mnemonicParsing="false" text="Change Major" />
+                        <TextField fx:id="modificationsErrorText" prefWidth = "500.0" layoutX="215.0" layoutY="252.0" />
+                        <RadioButton layoutX="372.0" layoutY="226.0" mnemonicParsing="false" text="TriState NY" visible="false" />
+                        <RadioButton layoutX="468.0" layoutY="226.0" mnemonicParsing="false" text="TriState CT" visible="false" />
+                        <RadioButton layoutX="372.0" layoutY="256.0" mnemonicParsing="false" text="International" visible="false" />
+                        <CheckBox layoutX="471.0" layoutY="256.0" mnemonicParsing="false" text="Study Abroad" visible="false" />
+                        <Label layoutX="80.0" layoutY="256.0" text="Success/Error Message:" />
+                     </children></AnchorPane>
                </content>
           </Tab>
             <Tab fx:id="commandTab" text="Commands">
@@ -201,6 +249,7 @@
                            </children>
                         </GridPane>
                         <TextField fx:id="commandsErrorTextField" layoutX="164.0" layoutY="186.0" prefHeight="25.0" prefWidth="400.0" />
+                        <Label layoutX="24.0" layoutY="190.0" text="Success/Error Message:" />
                      </children>
                   </AnchorPane>
               </content>
@@ -222,3 +271,4 @@
       </TabPane>
    </children>
 </AnchorPane>
+
