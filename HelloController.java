@@ -6,17 +6,15 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import com.example.project3cs213.model.*;
 
 public class HelloController {
-    private static final int REQUIRED_ADD_TOKENS = 4;
-    private static final int REQUIRED_TRISTATE_ADD_TOKENS = 4;
-    private static final int REQUIRED_INTERNATIONAL_ADD_TOKENS = 5;
-    private static final int REQUIRED_ENROLL_TOKENS = 4;
-    private static final int REQUIRED_DROP_TOKENS = 3;
-    private static final int REQUIRED_AWARD_TOKENS = 3;
     private static final boolean NOT_FROM_LOAD = false;
     private static final boolean FROM_LOAD = true;
     private static final int MIN_SCHOLARSHIP = 1;
@@ -24,8 +22,6 @@ public class HelloController {
     private static final int ERROR_CREDITS = -404;
     private static final int MINIMUM_AGE = 16;
     private static final int POSITIVE_CREDITS = 0;
-    private static final int NO_COMMANDS = 0;
-    private static final int MISSING_DATA_TRISTATE_COMMAND = 3;
     private static final int MIN_GRADUATE_CREDITS = 120;
     private static final int ROSTER_EMPTY = 0;
     private static final int COMPARE_TO_EQUAL = 0;
@@ -149,9 +145,39 @@ public class HelloController {
 
     @FXML
     private Button loadFromFileButton;
+
+    @FXML
+    private TextField rosterErrorText;
+
+    @FXML
+    private ToggleGroup MajorToggleGroup;
+
+    @FXML
+    private ToggleGroup nonResidentToggle;
+
+    // For Modification Tab
+    @FXML
+    private TextField modificationsScholarship;
+
+    @FXML
+    private TextField modificationsErrorText;
+
+    @FXML
+    private TextField modificationsFirstName;
+
+    @FXML
+    private TextField modificationsLastName;
+
+    @FXML
+    private DatePicker modificationsDatePicker;
+
+    @FXML
+    private ToggleGroup modsMajorToggle;
+
     // FOR Tuition Manager instance variables
     private Roster roster = new Roster();
     private Enrollment enrollment = new Enrollment();
+    private boolean loadedFile = false;
 
     @FXML
     protected void chooseResident(){
@@ -444,6 +470,368 @@ public class HelloController {
         printTextArea.setText(printString);
     }
 
+    @FXML
+    protected void onChangeMajor(){
+        String firstName = modificationsFirstName.getText();
+        String lastName = modificationsLastName.getText();
+        if (modificationsDatePicker.getValue() == null){
+            modificationsErrorText.setText("Missing data in command.");
+            return;
+        }
+        if (modsMajorToggle.getSelectedToggle() == null){
+            modificationsErrorText.setText("Missing data in command.");
+            return;
+        }
+        String stringDOB = modificationsDatePicker.getValue().toString();
+        stringDOB = stringDOB.substring(5, 7) + "/" + stringDOB.substring(stringDOB.length()-2, stringDOB.length()) + "/" +  stringDOB.substring(0, 4);
+        String stringMajor = modsMajorToggle.getSelectedToggle().getUserData().toString();
+        //System.out.println(stringMajor);
+        handleChangeMajor(firstName, lastName, stringDOB, stringMajor);
+    }
+
+    /**
+     Changes student major given the rest of the command from the user.
+     Prints out error if major is invalid or if the student is not in the roster
+     and success message if major was successfully changed
+     @param firstName first name of student 
+     @param lastName last name of student
+     @param stringDate string representation of the student's date of birth
+     @param stringMajor string representation of the student's requested major
+     */
+    private void handleChangeMajor(String firstName, String lastName, String stringDate, String stringMajor){
+        if (firstName.length() == NO_INPUT || lastName.length() == NO_INPUT || stringDate.length() == NO_INPUT || stringMajor.length() == NO_INPUT){
+            modificationsErrorText.setText("Missing data in command.");
+            return;
+        }
+        Date date = new Date(stringDate);
+        Major major = getMajor(stringMajor);
+
+        if (major == null){
+            modificationsErrorText.setText(("Major code invalid: " + stringMajor));
+            return;
+        }
+
+        Student student = new Resident(new Profile(firstName, lastName, date), Major.CS, 100);
+        if (this.roster.contains(student) == false){
+            modificationsErrorText.setText(firstName + " " + lastName + " " + stringDate + " is not in the roster.");
+            return;
+        }
+
+        modificationsErrorText.setText((firstName + " " + lastName + " " + stringDate + " major changed to " + stringMajor));
+        this.roster.changeMajor(student, major);
+    }
+
+    @FXML
+    protected void onAddClick(){
+        String firstName = rosterFirstNameText.getText();
+        String lastName = rosterLastNameText.getText();
+        String stringCredits = rosterCreditsText.getText();
+        if (rosterDatePicker.getValue() == null){
+            rosterErrorText.setText("Missing data in command.");
+            return;
+        }
+        String stringDOB = rosterDatePicker.getValue().toString();
+        stringDOB = stringDOB.substring(5, 7) + "/" + stringDOB.substring(stringDOB.length()-2, stringDOB.length()) + "/" +  stringDOB.substring(0, 4);
+        if (MajorToggleGroup.getSelectedToggle() == null){
+            rosterErrorText.setText("Missing data in command.");
+            return;
+        }
+        String stringMajor = MajorToggleGroup.getSelectedToggle().getUserData().toString();
+        if (nonResidentToggle.getSelectedToggle() == null){
+            rosterErrorText.setText("Missing data in command.");
+        }
+        String typeStudent = nonResidentToggle.getSelectedToggle().getUserData().toString();
+        if (typeStudent.equals("Resident")) handleAddResident(firstName, lastName, stringDOB, stringMajor, stringCredits, NOT_FROM_LOAD);
+        else if (typeStudent.equals("Non-Resident")) handleAddNonResident(firstName, lastName, stringDOB, stringMajor, stringCredits, NOT_FROM_LOAD);
+        else if (typeStudent.equals("International Study Abroad")) handleAddInternationalStudent(firstName, lastName, stringDOB, stringMajor, stringCredits, true, NOT_FROM_LOAD);
+        else if (typeStudent.equals("International Non-Study Abroad")) handleAddInternationalStudent(firstName, lastName, stringDOB, stringMajor, stringCredits, false, NOT_FROM_LOAD);
+        else if (typeStudent.equals("Tri-State NY")) handleAddTristateStudent(firstName, lastName, stringDOB, stringMajor, stringCredits, "NY", NOT_FROM_LOAD);
+        else if (typeStudent.equals("Tri-State CT")) handleAddTristateStudent(firstName, lastName, stringDOB, stringMajor, stringCredits, "CT", NOT_FROM_LOAD);
+        cleanRosterCommands();
+    }
+
+    /** 
+     * This method handles adding new tri-state students. Detects errors such as invalid 
+     * states, invalid commands, invalid majors, and invalid credits. Displays success
+     * message unless the method is called from handleLoadStudents().
+     * @param firstName first name of tri-state student
+     * @param lastName last name of tri-state student
+     * @param stringDOB string representation of student's date of birth
+     * @param stringMajor string representation of student's major
+     * @param stringCredits string representaiton of student's credits
+     * @param state either NY or CT to represent the state the student lives in 
+     * @param isFromLoad true if the caller is handleLoadStudents and false otherwise
+     */
+    private void handleAddTristateStudent(String firstName, String lastName, String stringDOB, String stringMajor, String stringCredits, String state, boolean isFromLoad){
+        if (firstName.length() == NO_INPUT || lastName.length() == NO_INPUT || stringDOB.length() == NO_INPUT || stringMajor.length() == NO_INPUT || stringCredits.length() == NO_INPUT){
+            rosterErrorText.setText("Missing data in line command.");
+            return;
+        }
+        Date dob = new Date(stringDOB);
+        if (state.length() == NO_INPUT){
+            rosterErrorText.setText("Missing the state code.");
+            return;
+        }
+        boolean validDate = validDate(dob, stringDOB, "roster");
+        if (validDate == false) return;
+
+        Major major = getMajor(stringMajor.toUpperCase());
+        if (major == null){
+            rosterErrorText.setText("Major code invalid: " + stringMajor);
+            return;
+        }
+        int credits = validCredits(stringCredits);
+        if (credits == ERROR_CREDITS) return;
+        if (state.toLowerCase().equals("ny") == false && state.toLowerCase().equals("ct") == false && state.toLowerCase().equals("nj") == false){
+            rosterErrorText.setText(state + ": Invalid state code.");
+            return;
+        }
+        Student student = new TriState(state, new Profile(firstName, lastName, dob), major, credits);
+        boolean addStudent = this.roster.add(student);
+        if (addStudent == false){
+            rosterErrorText.setText(student.getProfile().toString() + " is already in the roster.");
+            return;
+        }
+        if (isFromLoad == NOT_FROM_LOAD) rosterErrorText.setText(student.getProfile().toString() + " added to the roster.");
+    }
+
+    /** 
+     * This method handles added new international students. Detects errors such as 
+     * invalid commands, invalid dates, invalid majors, etc. Prints out a success 
+     * message unless this method was called from handleLoadStudent() method.
+     * @param firstName first name of international student
+     * @param lastName last name of international student
+     * @param stringDOB string representation of student's date of birth
+     * @param stringMajor string representation of student's major
+     * @param stringCredits string representaiton of student's credits
+     * @param isStudyAbroad true if the student studies abroad and false otherwise
+     * @param isFromLoad true if the caller is handleLoadStudents and false otherwise
+     */
+    private void handleAddInternationalStudent(String firstName, String lastName, String stringDOB, String stringMajor, String stringCredits, boolean isStudyAbroad, boolean isFromLoad){
+        if (firstName.length() == NO_INPUT || lastName.length() == NO_INPUT || stringDOB.length() == NO_INPUT || stringMajor.length() == NO_INPUT || stringCredits.length() == NO_INPUT){
+            rosterErrorText.setText("Missing data in line command.");
+            return;
+        }
+        Date dob = new Date(stringDOB);
+
+        boolean validDate = validDate(dob, stringDOB, "roster");
+        if (validDate == false) return;
+
+        Major major = getMajor(stringMajor.toUpperCase());
+        if (major == null){
+            rosterErrorText.setText("Major code invalid: " + stringMajor);
+            return;
+        }
+        int credits = 0;
+        try { 
+            credits = Integer.parseInt(stringCredits);
+        } catch (Exception e){ 
+            rosterErrorText.setText("Credits completed invalid: not an integer!");
+        }
+        if (credits < POSITIVE_CREDITS){
+            rosterErrorText.setText("Credits completed invalid: cannot be negative!");
+            return;
+        }
+        Student student = new International(isStudyAbroad, new Profile(firstName, lastName, dob), major, credits);
+        boolean addStudent = this.roster.add(student);
+        if (addStudent == false){
+            rosterErrorText.setText(student.getProfile().toString() + " is already in the roster.");
+            return;
+        }
+        if (isFromLoad == NOT_FROM_LOAD) rosterErrorText.setText(student.getProfile().toString() + " added to the roster.");
+    }
+
+    /** 
+     * This method handles adding new non-resident students. Detects errors such as
+     * invalid commands, invalid major, invalid date of birth, and if the student is already
+     * in the roster. Displays success message unless message caller is handleLoadStudents()
+     * @param firstName first name of non resident student
+     * @param lastName last name of non resident student
+     * @param stringDOB string representation of student's date of birth
+     * @param stringMajor string representation of student's major
+     * @param stringCredits string representaiton of student's credits
+     * @param isFromLoad true if the caller is handleLoadStudents and false otherwise
+     */
+    private void handleAddNonResident(String firstName, String lastName, String stringDOB, String stringMajor, String stringCredits, boolean isFromLoad){
+        if (firstName.length() == NO_INPUT || lastName.length() == NO_INPUT || stringDOB.length() == NO_INPUT || stringMajor.length() == NO_INPUT || stringCredits.length() == NO_INPUT){
+            System.out.println("Missing data in line command.");
+            return;
+        }
+        Date dob = new Date(stringDOB);
+        boolean validDate = validDate(dob, stringDOB, "roster");
+        if (validDate == false) return;
+
+        Major major = getMajor(stringMajor.toUpperCase());
+        if (major == null){
+            rosterErrorText.setText("Major code invalid: " + stringMajor);
+            return;
+        }
+        int credits = 0;
+        try { 
+            credits = Integer.parseInt(stringCredits);
+        } catch (Exception e){ 
+            rosterErrorText.setText("Credits completed invalid: not an integer!");
+        }
+        if (credits < POSITIVE_CREDITS){
+            rosterErrorText.setText("Credits completed invalid: cannot be negative!");
+            return;
+        }
+        Student student = new NonResident(new Profile(firstName, lastName, dob), major, credits);
+        boolean addStudent = this.roster.add(student);
+        if (addStudent == false){
+            rosterErrorText.setText(student.getProfile().toString() + " is already in the roster.");
+            return;
+        }
+        if (isFromLoad == NOT_FROM_LOAD) rosterErrorText.setText(student.getProfile().toString() + " added to the roster.");
+    }
+
+    /** 
+     * This method handles adding new resident students. Detects errors such as invalid
+     * commands and invalid inputted information about the resident student. Displays
+     * success message unless the method caller is handleLoadStudents()
+     * @param firstName first name of resident student
+     * @param lastName last name of resident student
+     * @param stringDOB string representation of student's date of birth
+     * @param stringMajor string representation of student's major
+     * @param stringCredits string representaiton of student's credits
+     * @param isFromLoad true if the caller is handleLoadStudents and false otherwise
+     */
+    private void handleAddResident(String firstName, String lastName, String stringDOB, String stringMajor, String stringCredits, boolean isFromLoad){
+        if (firstName.length() == NO_INPUT || lastName.length() == NO_INPUT || stringDOB.length() == NO_INPUT || stringMajor.length() == NO_INPUT || stringCredits.length() == NO_INPUT){
+            rosterErrorText.setText("Missing data in line command.");
+            return;
+        }
+        Date dob = new Date(stringDOB);
+        Major major = getMajor(stringMajor.toUpperCase());
+        if (major == null){
+            rosterErrorText.setText("Major code invlaid: " + stringMajor);
+            return;
+        }
+        boolean validDate = validDate(dob, stringDOB, "roster");
+        if (validDate == false) return;
+
+        int credits = 0;
+        try  {
+            credits = Integer.parseInt(stringCredits);
+        } catch (Exception e){
+            rosterErrorText.setText("Credits completed invalid: not an integer!");
+            return;
+        }
+        if (credits < POSITIVE_CREDITS){
+            rosterErrorText.setText("Credits completed invalid: cannot be negative!");
+            return;
+        }
+        Student student = new Resident(new Profile(firstName, lastName, dob), major, credits);
+        boolean addStudent = this.roster.add(student);
+        if (addStudent == false){
+            rosterErrorText.setText(student.getProfile().toString() + " is already in the roster.");
+            return;
+        }
+        if (isFromLoad == NOT_FROM_LOAD) rosterErrorText.setText(student.getProfile().toString() + " added to the roster.");
+    }
+
+    /**
+     * Sets user input to default value after command is initiated
+     */
+    private void cleanRosterCommands(){
+        rosterFirstNameText.setText("");
+        rosterLastNameText.setText("");
+        rosterDatePicker.setValue(null);
+        rosterCreditsText.setText("");
+        MajorToggleGroup.selectToggle(null);
+        nonResidentToggle.selectToggle(null);
+    }
+
+    @FXML
+    protected void onRemoveClick(){
+        String firstName = rosterFirstNameText.getText();
+        String lastName = rosterLastNameText.getText();
+        if (firstName.length() == NO_INPUT || lastName.length() == NO_INPUT || rosterDatePicker.getValue() == null){
+            rosterErrorText.setText("Missing data in command.");
+            return;
+        }
+        String stringDOB = rosterDatePicker.getValue().toString();
+        stringDOB = stringDOB.substring(5, 7) + "/" + stringDOB.substring(stringDOB.length()-2, stringDOB.length()) + "/" +  stringDOB.substring(0, 4);
+        handleRemoveStudent(firstName, lastName, stringDOB);
+        cleanRosterCommands();
+    }
+
+    /**
+     Removes student from the Roster unless they are not in the roster.
+     Prints out error or success message.
+     @param firstName first name of student to be removed
+     @param lastName last name of student to be removed
+     @param stringDate string representation of the student's date of birth
+     */
+    private void handleRemoveStudent(String firstName, String lastName, String stringDate){
+        Date date = new Date(stringDate);
+
+        Student student = new Resident(new Profile(firstName, lastName, date), Major.CS, 106);
+        if (this.roster.contains(student) == false){
+            rosterErrorText.setText(firstName + " " + lastName + " " + stringDate + " is not in the roster.");
+            return;
+        }
+
+        this.roster.remove(student);
+        rosterErrorText.setText(firstName + " " + lastName + " " + stringDate + " removed from the roster.");
+    }
+
+    @FXML
+    protected void onLoadClick(){
+        if (loadedFile == true) { 
+            rosterErrorText.setText("Already loaded from file!");
+            return;
+        }
+        loadedFile = true;
+        try {
+            handleLoadStudents();
+        } catch (FileNotFoundException e){
+            rosterErrorText.setText("File not found!");
+        }
+    }
+
+    /** 
+     * This method reads input from a file passed into it and adds students to the roster depending
+     * on the contents of that file.
+     * @param file String representation of the file to read containing new students
+     * @throws FileNotFoundException Error if the file was not found
+     */
+    private void handleLoadStudents() throws FileNotFoundException{
+        //System.out.println("Working Directory = " + System.getProperty("user.dir"));
+        Scanner scanner = new Scanner(new File("src/main/java/com/example/project3cs213/studentList.txt"));
+        while (scanner.hasNextLine()){
+            StringTokenizer st = new StringTokenizer(scanner.nextLine(), ",");
+            String firstOperating = st.nextToken();
+            String firstName = st.nextToken();
+            String lastName = st.nextToken();
+            String stringDOB = st.nextToken();
+            String stringMajor = st.nextToken();
+            String stringCredits = st.nextToken();
+            switch(firstOperating){
+                case "R": 
+                    handleAddResident(firstName, lastName, stringDOB, stringMajor, stringCredits, FROM_LOAD);
+                    break;
+                case "N":
+                    handleAddNonResident(firstName, lastName, stringDOB, stringMajor, stringCredits, FROM_LOAD);
+                    break;
+                case "I":
+                    boolean isStudyAbroad = false;
+                    if (st.nextToken() == "true") isStudyAbroad = true;
+                    handleAddInternationalStudent(firstName, lastName, stringDOB, stringMajor, stringCredits, isStudyAbroad, FROM_LOAD);
+                    break;
+                case "T":
+                    handleAddTristateStudent(firstName, lastName, stringDOB, stringMajor, stringCredits, st.nextToken(), FROM_LOAD);
+                    break;
+                default: 
+                    System.out.println("Invalid command.");
+                    return;
+            }
+        }
+        rosterErrorText.setText("Students loaded to the roster.");
+        scanner.close();
+    }
+    
+
     /**
      * Helper method that checks if the date is a valid of date of birth.
      * @param date Date object which represents the date to be checked
@@ -454,18 +842,22 @@ public class HelloController {
     private boolean validDate(Date date, String stringDate, String from){
         if (date.isValid() == false){
             if (from.equals("enroll")) commandsErrorTextField.setText("DOB invalid: " + stringDate + " not a valid calendar date!");
+            if (from.equals("roster")) rosterErrorText.setText("DOB invalid: " + stringDate + " not a valid calendar date!");
             return false;
         }
         if (isBeforeCurrent(date) == false){
             if (from.equals("enroll")) commandsErrorTextField.setText("DOB invalid: " + stringDate + " is today or in the future!");
+            if (from.equals("roster")) rosterErrorText.setText("DOB invalid: " + stringDate + " is today or in the future!");
             return false;
         }
         if (date.getAge() < MINIMUM_AGE){
             if (from.equals("enroll")) commandsErrorTextField.setText("DOB invalid: " + stringDate + " younger than 16 years old.");
+            if (from.equals("roster")) rosterErrorText.setText("DOB invalid: " + stringDate + " younger than 16 years old.");
             return false;
         }
         return true;
     }
+
 
     /**
      Takes in a student's date of birth and returns true if the student
@@ -502,5 +894,29 @@ public class HelloController {
             default:
                 return null;
         }
+    }
+
+    /**
+     * Helper method that calculates the integer value of the inputted String.
+     * If the String is not an integer it prints out an error message and returns -1.
+     * @param number String representation of a number
+     * @return the integer value of the String or -1 if it is not valid
+     */
+    private int validCredits(String number){
+        int credits = 0;
+
+        try { 
+            credits = Integer.parseInt(number);
+        } catch (Exception e){
+            rosterErrorText.setText("Credits completed invalid: not an integer!");
+            return ERROR_CREDITS;
+        }
+
+        if (credits < POSITIVE_CREDITS){
+            rosterErrorText.setText("Credits completed invalid: cannot be negative!");
+            return ERROR_CREDITS;
+        }
+
+        return credits;
     }
 }
