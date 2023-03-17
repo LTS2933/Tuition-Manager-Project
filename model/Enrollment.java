@@ -112,8 +112,8 @@ public class Enrollment {
     }
 
     /**
-     * This method loops through the enrollment list and prints out every student
-     * in standard output.
+     * This method loops through the enrollment list and returns a String containing every student
+     * @return String representing the entire enrollment list
      */
     public String print(){
         if (this.size == STUDENTS_EMPTY) return "Enrollment is empty!";
