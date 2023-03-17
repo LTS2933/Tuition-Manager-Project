@@ -115,8 +115,9 @@ public class Roster {
     }
 
     /**
-     Prints the roster in standard output sorted by the student's
+     Returns the roster in String format sorted by the student's
      Profile (last name, first name, and date of birth).
+     @return String representation of the student list
      */
     public String print(){
         if (this.size == ROSTER_EMPTY)return "Student roster is empty!";
@@ -142,7 +143,8 @@ public class Roster {
     }
 
     /**
-     Prints roster to standard output sorted by school, major.
+     Returns roster as a String sorted by school, major.
+     @return String representing the roster sorted by school, major.
      */
     public String printBySchoolMajor(){
         if (this.size == ROSTER_EMPTY) return "Student roster is empty!";
@@ -169,7 +171,8 @@ public class Roster {
     }
 
     /**
-     Prints roster to standard output sorted by standing
+     Returns roster as a String sorted by standing
+     @return String representing the students sorted by standing
      */
     public String printByStanding(){
         if (this.size == ROSTER_EMPTY)return "Student roster is empty!";
